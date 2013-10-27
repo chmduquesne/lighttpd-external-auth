@@ -245,9 +245,9 @@ if not valid_access_token() then
 end
 
 -- Otherwise, check the user identity
+local cookie = get_cookie()
+local identity = url_decode(cookie[config["identity"]] or "")
 if config["authorized_identities"] then
-    local cookie = get_cookie()
-    local identity = url_decode(cookie[config["identity"]] or "")
     -- The login page confirms the identity, but the area is restricted.
     if not config["authorized_identities"][identity] then
         -- The user is presented a 403 page
@@ -269,4 +269,12 @@ if config["authorized_identities"] then
         return 403
     end
 end
+
+-- Starting from lighttpd 1.4.33, it is possible to set REMOTE_USER via
+-- the lua interface. However, it is not possible to simply detect the
+-- lighttpd version from lua. So you may want to manually uncomment the
+-- following lines if your version of lighty is >= 1.4.33. Note that this
+-- was never actually tested, so use at your own risk!
+-- lighty.req_env["REMOTE_USER"] = identity
+
 --}}
