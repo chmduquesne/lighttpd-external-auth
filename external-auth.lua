@@ -236,6 +236,12 @@ if config_file ~= nil and config_file ~= '' then
     import(config_file)
 end
 
+-- Force https
+if (lighty.env["uri.scheme"] == "http") then
+    lighty.header["Location"] = "https://" .. lighty.env["uri.authority"] .. lighty.env["request.uri"]
+    return 302
+end
+
 -- If the token is not valid, redirect to the login page
 if not valid_access_token() then
     local url = config["login_url"]
