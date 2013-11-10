@@ -58,7 +58,7 @@ function magnet_authentify($identity) {
     // Compute the token
     $secret = file_get_contents($magnet_config["secret_file"]) or "";
     $message = $identity . $timestamp;
-    $access_token = base64_encode(hash_hmac("sha1", $message, $secret, true));
+    $access_token = hash_hmac("sha1", $message, $secret);
     // Set identity and access token, so that the magnet script can verify us
     $cookie_expires = $timestamp + $magnet_config["token_validity"];
     setcookie($magnet_config["identity"], $identity, $cookie_expires, "/",

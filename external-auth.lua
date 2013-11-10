@@ -22,21 +22,17 @@
 --
 -- Note for debian users:
 --
--- This script requires luacrypto and lbase64. Unfortunately, none of
--- those are currently (2013-07-25) available as debian packages. There is
--- another implementation of base64 available in luasocket, but it seemed
--- a bit overkill to make it a requirement while it is available in a
--- smaller package. There is no other implementation of hmac-sha1 that I
--- know of available as a debian package. If one is made, please let me
--- know, I'll port this script so it can be used with dependencies that
--- are available on debian.
+-- This script requires luacrypto. Unfortunately (2013-11-10), it is not
+-- available as a debian package. This package is required because it
+-- implements hmac-sha1. If you know about another lua implementation of
+-- hmac-sha1 that would be packaged on debian, please let me know, I will
+-- port this script to use it.
 --
 -- As an alternative to debian packages, you can use luarocks to download
 -- and install these dependencies:
 --
 -- sudo aptitude install luarocks
 -- sudo luarocks install luacrypto
--- sudo luarocks install lbase64
 --
 -- If everything is installed correctly and the path of luarocks are
 -- correctly setup (which should be automatic), this script will work.
@@ -45,7 +41,6 @@
 require "luarocks.loader"
 local crypto = require("crypto")
 local hmac = require("crypto.hmac")
-local base64 = require("base64")
 
 -- {{ Default config
 config = { }
@@ -91,12 +86,6 @@ end
 -- }}
 
 --{{ Core functions
-
--- Returns the hmac_sha1 of the message, signed with the key, then base64
--- encoded (This is the only function that requires external modules).
-function base64_hmac_sha1(key, message)
-    return base64.encode(hmac.digest("sha1", message, key, true))
-end
 
 -- Returns a random string of specified length (default = 40)
 -- characters are taken in [0-9a-zA-Z]
@@ -205,7 +194,7 @@ function valid_access_token()
     -- compute valid token
     local message = identity .. timestamp
     local secret = get_secret()
-    local hash = base64_hmac_sha1(secret, message)
+    local hash = hmac.digest("sha1", message, key)
 
     -- Useful for debugging your login page
     print("Valid access_token: " .. hash)
