@@ -5,7 +5,6 @@ This is the actual php code running
 
 Installation instructions:
 
-- Follow the instructions of css/README.md
 - Follow the instructions of hybridauth/README.md
 - In `magnet.php`, set `$magnet_config["domain"]` to your own domain
   name.
