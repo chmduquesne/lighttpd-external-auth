@@ -194,7 +194,7 @@ function valid_access_token()
     -- compute valid token
     local message = identity .. timestamp
     local secret = get_secret()
-    local hash = hmac.digest("sha1", message, key)
+    local hash = hmac.digest("sha1", message, secret)
 
     -- Useful for debugging your login page
     print("Valid access_token: " .. hash)
