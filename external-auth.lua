@@ -270,6 +270,6 @@ end
 -- lighttpd version from lua. So you may want to manually uncomment the
 -- following lines if your version of lighty is >= 1.4.33. Note that this
 -- was never actually tested, so use at your own risk!
--- lighty.req_env["REMOTE_USER"] = identity
+lighty.req_env["REMOTE_USER"] = identity
 
 --}}
