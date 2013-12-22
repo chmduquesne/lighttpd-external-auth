@@ -208,7 +208,7 @@ end
 function req_url()
     local res = "https://"
     res = res .. lighty.env["uri.authority"]
-    res = res .. lighty.env["request.uri"]
+    res = res .. lighty.env["request.orig-uri"]
     return res
 end
 --}}
