@@ -211,6 +211,19 @@ function req_url()
     res = res .. lighty.env["request.orig-uri"]
     return res
 end
+
+-- Detect if we are in a secure environment
+function secure()
+    if lighty.env["uri.scheme"] == "https" then
+        return true
+    end
+    https_env_var = lighty.req_env["HTTPS"]
+    if https_env_var ~= nil and https_env_var == "on" then
+        return true
+    end
+    return false
+end
+
 --}}
 
 --{{ script logic
@@ -226,8 +239,8 @@ if config_file ~= nil and config_file ~= '' then
 end
 
 -- Force https
-if (lighty.env["uri.scheme"] == "http") then
-    lighty.header["Location"] = "https://" .. lighty.env["uri.authority"] .. lighty.env["request.uri"]
+if not secure() then
+    lighty.header["Location"] = "https://" .. lighty.env["uri.authority"] .. lighty.env["request.orig-uri"]
     return 302
 end
 
